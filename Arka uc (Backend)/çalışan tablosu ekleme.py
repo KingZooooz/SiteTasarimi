@@ -1,7 +1,12 @@
 import sqlite3
+import os
+
+# Get the folder where this script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(script_dir, "veriler.db")
 
 # Veritabanı dosyasına bağlan
-conn = sqlite3.connect("D:/Business woman/SiteTasarimi/Arka uc (Backend)/veriler.db")
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 # Kullanıcıdan veri al
