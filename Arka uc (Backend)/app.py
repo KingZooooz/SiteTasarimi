@@ -19,14 +19,37 @@ from Workslog_Tablosu.ekleme import add_all_worklogs
 from Workslog_Tablosu.ekleme import add_all_worklogs
 from Workslog_Tablosu.guncelleme import workslog_guncelle
 from Workslog_Tablosu.silme import workslog_sil
+
+
+
+from kullanıcılar_Tablosu.ekleme import kullanici_ekle
+from kullanıcılar_Tablosu.listeleme import kullanici_listele
+from kullanıcılar_Tablosu.güncelleme import kullanici_guncelle
+from kullanıcılar_Tablosu.silme import kullanici_sil
+
+
+
+from forman_Tablosu.ekleme import forman_ekle
+from forman_Tablosu.listeleme import forman_listele
+from forman_Tablosu.guncelle import forman_guncelle
+from forman_Tablosu.silme import forman_sil
+
+
+
+from overtime_Tablosu.ekleme import overtime_ekle
+from overtime_Tablosu.listeleme import overtime_listele
+from overtime_Tablosu.guncelleme import overtime_guncelle
+from overtime_Tablosu.silme import overtime_sil
+
+
+
+
+from ceza_Tablosu.ekleme import ekle_ceza
+
+
+
+
 from flask_cors import CORS
-
-
-
-
-
-
-
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -54,6 +77,34 @@ app.add_url_rule('/workslog_guncelle', view_func=workslog_guncelle, methods=['PU
 app.add_url_rule('/workslog_sil', view_func=workslog_sil, methods=['DELETE'])
 
 
+
+
+app.add_url_rule('/kullanici_ekle', view_func=kullanici_ekle, methods=['POST'])
+app.add_url_rule('/kullanici_listele', view_func=kullanici_listele, methods=['GET'])
+app.add_url_rule('/kullanici_guncelle', view_func=kullanici_guncelle, methods=['PUT'])
+app.add_url_rule('/kullanici_sil', view_func=kullanici_sil, methods=['DELETE'])
+
+
+
+
+app.add_url_rule('/forman_ekle', view_func=forman_ekle, methods=['POST'])
+app.add_url_rule('/forman_listele', view_func=forman_listele, methods=['GET'])
+app.add_url_rule('/forman_guncelle', view_func=forman_guncelle, methods=['PUT'])
+app.add_url_rule('/forman_sil', view_func=forman_sil, methods=['DELETE'])
+
+
+
+
+app.add_url_rule('/overtime_ekle', view_func=overtime_ekle, methods=['POST'])
+app.add_url_rule('/overtime_listele', view_func=overtime_listele, methods=['GET'])
+app.add_url_rule('/overtime_guncelle', view_func=overtime_guncelle, methods=['PUT'])
+app.add_url_rule('/overtime_sil', view_func=overtime_sil, methods=['DELETE'])
+
+
+
+
+
+app.add_url_rule('/ceza_ekle', view_func=ekle_ceza, methods=['POST'])
 
 
 @app.route('/')
