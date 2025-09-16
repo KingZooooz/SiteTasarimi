@@ -1,14 +1,36 @@
 import sqlite3
 
-conn = sqlite3.connect("D:/Business woman/SiteTasarimi/Arka uc (Backend)/veriler.db")
+# --- Bağlantı aç ---
+conn = sqlite3.connect("veriler.db")
+conn.row_factory = sqlite3.Row  # Satırları sözlük gibi alabilmek için
 cursor = conn.cursor()
 
-# Tüm kayıtları al
-cursor.execute("SELECT * FROM workslog")
-loglar = cursor.fetchall()
+def listele_worklogs():
+    cursor.execute("SELECT * FROM Worklogs")
+    rows = cursor.fetchall()
 
-print("----- Workslog -----")
-for log in loglar:
-    print(f"ID: {log[0]}, Çalışan ID: {log[1]}, Adı: {log[2]}, Site Adı: {log[3]}, Site ID: {log[4]}, Saat: {log[5]}, Tarih: {log[6]}")
+    if not rows:
+        print("❌ Hata: Worklogs tablosu boş.")
+        return []
+
+    # Satırları sözlük listesi hâline getir
+    worklogs_list = []
+    for row in rows:
+        worklogs_list.append({
+            "ID": row["ID"],
+            "Çalışan_ID": row["Çalışan_ID"],
+            "Çalışan_Adi": row["Çalışan_Adi"],
+            "Site_ID": row["Site_ID"],
+            "Site_Adi": row["Site_Adi"],
+            "Saat": row["Saat"],
+            "Tarih": row["Tarih"]
+        })
+    return worklogs_list
+
+# --- Test ---
+veriler = listele_worklogs()
+for v in veriler:
+    print(v)
 
 conn.close()
+

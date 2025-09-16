@@ -1,44 +1,54 @@
 import sqlite3
+from datetime import datetime
 
 # --- Bağlantı aç ---
-conn = sqlite3.connect("D:/Business woman/SiteTasarimi/Arka uc (Backend)/veriler.db")
+conn = sqlite3.connect("veriler.db")
 cursor = conn.cursor()
 
-def add_all_worklogs():
-    # Tüm çalışanları al
-    cursor.execute("""
-        SELECT "Çalışan ID", "Adı", "Site ID" FROM "Çalışan Detayları"
-    """)
-    calisanlar = cursor.fetchall()
+# --- Fonksiyon ---
+def ekle_worklog(calisan_id, site_id, saat=None, tarih=None):
+    if not tarih:
+        tarih = datetime.now().strftime("%Y-%m-%d")
+    if not saat:
+        saat = datetime.now().strftime("%H:%M:%S")
     
-    if not calisanlar:
-        print("Hata: Çalışan bulunamadı.")
+    # Aynı çalışan ve tarih için kayıt var mı kontrol et
+    cursor.execute("""
+        SELECT * FROM "Worklogs"
+        WHERE "Çalışan_ID" = ? AND "Tarih" = ?
+    """, (calisan_id, tarih))
+    
+    mevcut = cursor.fetchone()
+    if mevcut:
+        print(f"❌ Hata: Bu tarihte mevcut olan bir worklog var!! (Çalışan ID {calisan_id}, Tarih {tarih})")
         return
     
-    for calisan_id, adi, site_id in calisanlar:
-        # Site adını al
-        cursor.execute("""
-            SELECT "Site Adı" FROM "Site Detayları" WHERE "Site ID" = ?
-        """, (site_id,))
-        site = cursor.fetchone()
-        
-        if site is None:
-            print(f"Hata: Site ID {site_id} bulunamadı.")
-            continue
-        
-        site_adi = site[0]
-        
-        # Workslog tablosuna ekle
-        cursor.execute("""
-            INSERT INTO workslog ("Çalışan ID", "Adı", "Site Adı", "Site ID")
-            VALUES (?, ?, ?, ?)
-        """, (calisan_id, adi, site_adi, site_id))
+    # Çalışan adını çek
+    cursor.execute("""SELECT "Kullanıcı_Adi" FROM "Kullanıcılar" WHERE "ID" = ?""", (calisan_id,))
+    calisan = cursor.fetchone()
+    if not calisan:
+        print(f"❌ Hata: Çalışan ID {calisan_id} bulunamadı.")
+        return
+    calisan_adi = calisan[0]
     
+    # Site adını çek
+    cursor.execute("""SELECT "Site Adı" FROM "Site Detayları" WHERE "Site ID" = ?""", (site_id,))
+    site = cursor.fetchone()
+    if not site:
+        print(f"❌ Hata: Site ID {site_id} bulunamadı.")
+        return
+    site_adi = site[0]
+    
+    # Worklog ekle
+    cursor.execute("""
+        INSERT INTO "Worklogs" ("Çalışan_ID", "Çalışan_Adi", "Site_ID", "Site_Adi", "Saat", "Tarih")
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (calisan_id, calisan_adi, site_id, site_adi, saat, tarih))
     conn.commit()
-    print("Tüm çalışanların verileri workslog tablosuna eklendi.")
+    print(f"✅ Worklog eklendi: {calisan_adi} ({site_adi}) - {tarih} {saat}")
 
-# --- Test çağrısı ---
-add_all_worklogs()
+# --- Test ---
+ekle_worklog(1, 1)
+# ekle_worklog(2, 2, "15:30:00", "2025-09-16")
 
-conn.close()
-
+# conn.close()
