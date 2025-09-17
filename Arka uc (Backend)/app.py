@@ -49,6 +49,45 @@ from ceza_Tablosu.ekleme import ekle_ceza
 
 
 
+from Loans.add import add_loan
+from Loans.update import update_loan
+from Loans.get import get_loans
+from Loans.delete import delete_loan
+from Loans.payloan import pay_loan
+
+
+from Evaluation.add import add_evaluation
+from Evaluation.update import update_evaluation
+from Evaluation.get import get_all_evaluations
+from Evaluation.get_id import get_evaluation_by_employee
+from Evaluation.delete import delete_evaluation
+
+
+
+
+from Jobs.add import add_job
+from Jobs.get import get_all_jobs
+from Jobs.update import update_job
+from Jobs.delete import delete_job
+
+
+from Absence.add import add_absence
+from Absence.delete import delete_absence
+
+
+
+
+from Rewards_And_Penalties.add import add_reward_penalty
+from Rewards_And_Penalties.update import update_reward_penalty
+from Rewards_And_Penalties.get import get_rewards_penalties
+from Rewards_And_Penalties.delete import delete_reward_penalty
+
+
+
+
+
+
+
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -105,6 +144,51 @@ app.add_url_rule('/overtime_sil', view_func=overtime_sil, methods=['DELETE'])
 
 
 app.add_url_rule('/ceza_ekle', view_func=ekle_ceza, methods=['POST'])
+
+
+
+
+
+
+app.add_url_rule('/api/add_loan', view_func=add_loan, methods=['POST'])
+app.add_url_rule('/api/update_loan', view_func=update_loan, methods=['PUT'])
+app.add_url_rule('/api/get_loans', view_func=get_loans, methods=['GET'])
+app.add_url_rule('/api/loans/delete/<int:loan_id>', view_func=delete_loan, methods=['DELETE'])
+app.add_url_rule('/api/loans/pay', view_func=pay_loan, methods=['POST'])
+
+
+
+
+app.add_url_rule('/api/evaluation/add', view_func=add_evaluation, methods=['POST'])
+app.add_url_rule('/api/evaluation/update', view_func=update_evaluation, methods=['PUT'])
+app.add_url_rule('/api/evaluation', view_func=get_all_evaluations, methods=['GET'])
+app.add_url_rule('/api/evaluation/<int:employee_id>', view_func=get_evaluation_by_employee, methods=['GET'])
+app.add_url_rule('/api/evaluation/delete/<int:evaluation_id>', view_func=delete_evaluation, methods=['DELETE'])
+
+
+
+
+
+app.add_url_rule('/api/absence/add', view_func=add_absence, methods=['POST'])
+app.add_url_rule('/api/absence/delete/<int:log_id>', view_func=delete_absence, methods=['DELETE'])
+
+
+
+app.add_url_rule('/api/jobs/add', view_func=add_job, methods=['POST'])
+app.add_url_rule('/api/jobs', view_func=get_all_jobs, methods=['GET']) 
+app.add_url_rule('/api/jobs/update', view_func=update_job, methods=['PUT'])
+app.add_url_rule('/api/jobs/delete/<int:job_id>', view_func=delete_job, methods=['DELETE'])
+
+
+
+
+
+app.add_url_rule('/api/rewards_penalties/add', view_func=add_reward_penalty, methods=['POST'])
+app.add_url_rule('/api/rewards_penalties/update', view_func=update_reward_penalty, methods=['PUT'])
+app.add_url_rule('/api/rewards_penalties', view_func=get_rewards_penalties, methods=['GET'])
+app.add_url_rule('/api/rewards_penalties/delete/<int:entry_id>', view_func=delete_reward_penalty, methods=['DELETE'])
+
+
 
 
 @app.route('/')
