@@ -1,14 +1,19 @@
 from flask import Flask, jsonify
 import sqlite3
-from config import DATABASE
+import os
 import traceback
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
+
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
+
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row  # allows dict-like access
     return conn
 

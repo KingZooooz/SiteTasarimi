@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify
 import sqlite3
-from config import DATABASE
 import traceback
 from datetime import datetime
+import os
 
 app = Flask(__name__)  # This is fine **only if you run this file directly**
 
+# Get the folder where this script is located
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
