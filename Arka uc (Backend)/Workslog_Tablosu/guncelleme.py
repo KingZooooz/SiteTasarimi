@@ -5,8 +5,9 @@ import os
 app = Flask(__name__)
 
 # Veritabanı yolu
-script_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(script_dir, "veriler.db")
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
 
 def get_db_connection():
     conn = sqlite3.connect(db_path)
@@ -14,7 +15,7 @@ def get_db_connection():
     return conn
 
 # -----------------------
-# Workslog Güncelleme (SADECE VAR OLAN KAYDI)
+# Workslog Güncelleme (Sadece Var Olan Kaydı)
 # -----------------------
 @app.route("/workslog_guncelle/<int:calisan_id>", methods=["PUT"])
 def workslog_guncelle(calisan_id):
@@ -22,16 +23,18 @@ def workslog_guncelle(calisan_id):
     if not data:
         return jsonify({"error": "Eksik JSON verisi"}), 400
 
-    adi = data.get("Adı")
-    site_adi = data.get("Site Adı")
-    site_id = data.get("Site ID")
+    adi = data.get("Çalışan_Adi")
+    site_adi = data.get("Site_Adi")
+    site_id = data.get("Site_ID")
+    durum = data.get("Durum")
+    calisilan_saatler = data.get("Calisilan_Saatler")
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
         # Workslog kaydı var mı kontrol et
-        cursor.execute('SELECT * FROM workslog WHERE "Çalışan ID" = ?', (calisan_id,))
+        cursor.execute('SELECT * FROM Worklogs WHERE "Çalışan_ID" = ?', (calisan_id,))
         mevcut = cursor.fetchone()
         if not mevcut:
             conn.close()
@@ -42,20 +45,26 @@ def workslog_guncelle(calisan_id):
         values = []
 
         if adi is not None:
-            fields.append('"Adı" = ?')
+            fields.append('"Çalışan_Adi" = ?')
             values.append(adi)
         if site_adi is not None:
-            fields.append('"Site Adı" = ?')
+            fields.append('"Site_Adi" = ?')
             values.append(site_adi)
         if site_id is not None:
-            fields.append('"Site ID" = ?')
+            fields.append('"Site_ID" = ?')
             values.append(site_id)
+        if durum is not None:
+            fields.append('"Durum" = ?')
+            values.append(durum)
+        if calisilan_saatler is not None:
+            fields.append('"Calisilan_Saatler" = ?')
+            values.append(calisilan_saatler)
 
         if not fields:
             conn.close()
             return jsonify({"error": "Güncellenecek alan yok"}), 400
 
-        query = f'UPDATE workslog SET {", ".join(fields)} WHERE "Çalışan ID" = ?'
+        query = f'UPDATE Worklogs SET {", ".join(fields)} WHERE "Çalışan_ID" = ?'
         values.append(calisan_id)
 
         cursor.execute(query, values)
@@ -74,3 +83,4 @@ def workslog_guncelle(calisan_id):
 # -----------------------
 if __name__ == "__main__":
     app.run(port=5012, debug=True)
+

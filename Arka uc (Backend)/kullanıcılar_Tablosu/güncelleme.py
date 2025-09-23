@@ -1,7 +1,12 @@
 from flask import Flask, request, jsonify
 import sqlite3
+import os
 
 app = Flask(__name__)
+
+# Veritabanı yolu dinamik
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
 
 @app.route('/kullanici_guncelle/<int:kullanici_id>', methods=['PUT'])
 def kullanici_guncelle(kullanici_id):
@@ -12,7 +17,7 @@ def kullanici_guncelle(kullanici_id):
     baslama_tarihi = data.get("Baslama_Tarihi")
 
     try:
-        conn = sqlite3.connect(r"D:\Business woman\SiteTasarimi\Arka uc (Backend)\kullanıcılar_Tablosu\veriler.db")
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
         cursor.execute("""

@@ -5,8 +5,9 @@ import os
 app = Flask(__name__)
 
 # Veritabanı yolu
-script_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(script_dir, "veriler.db")
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
 
 def get_db_connection():
     conn = sqlite3.connect(db_path)
@@ -14,15 +15,27 @@ def get_db_connection():
     return conn
 
 # -----------------------
-# Tüm Workslog Verilerini Listele
+# Tüm Worklogs Verilerini Listele
 # -----------------------
 @app.route("/workslog", methods=["GET"])
 def workslog_listele():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM workslog')
-        veriler = [dict(row) for row in cursor.fetchall()]
+        cursor.execute('SELECT * FROM Worklogs')
+        veriler = []
+        for row in cursor.fetchall():
+            veriler.append({
+                "ID": row["ID"],
+                "Çalışan_ID": row["Çalışan_ID"],
+                "Çalışan_Adi": row["Çalışan_Adi"],
+                "Site_ID": row["Site_ID"],
+                "Site_Adi": row["Site_Adi"],
+                "Durum": row["Durum"],
+                "Calisilan_Saatler": row["Calisilan_Saatler"],
+                "Tarih": row["Tarih"],
+                "Saat": row["Saat"]
+            })
         conn.close()
         return jsonify(veriler), 200
     except sqlite3.Error as e:
@@ -33,3 +46,4 @@ def workslog_listele():
 # -----------------------
 if __name__ == "__main__":
     app.run(port=5011, debug=True)
+

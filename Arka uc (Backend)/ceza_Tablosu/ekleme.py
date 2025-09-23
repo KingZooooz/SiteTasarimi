@@ -1,8 +1,17 @@
 from flask import Flask, request, jsonify
 import sqlite3
+import os
 from datetime import datetime
 
 app = Flask(__name__)
+
+# Dinamik veritabanı yolu
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
+def get_db_connection():
+    conn = sqlite3.connect(db_path)
+    return conn
 
 @app.route("/ceza_ekle", methods=["POST"])
 def ekle_ceza():
@@ -13,9 +22,9 @@ def ekle_ceza():
         site_id = data.get("site_id")
         site_adi = data.get("site_adi")
         saat = data.get("saat")
-        tarih = data.get("tarih", datetime.now().strftime("%Y-%m-%d"))  # eğer boşsa bugünün tarihi
+        tarih = data.get("tarih", datetime.now().strftime("%Y-%m-%d"))  # boşsa bugünün tarihi
 
-        conn = sqlite3.connect(r"D:\Business woman\SiteTasarimi\Arka uc (Backend)\ceza_Tablosu\veriler.db")
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         cursor.execute("""

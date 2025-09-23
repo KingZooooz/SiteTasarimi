@@ -1,12 +1,14 @@
 from flask import Flask, jsonify
 import sqlite3
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
 # Veritabanı yolu
-script_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(script_dir, "veriler.db")
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
 
 def get_db_connection():
     conn = sqlite3.connect(db_path)
@@ -14,7 +16,7 @@ def get_db_connection():
     return conn
 
 # -----------------------
-# Tüm Çalışanları Workslog'a Ekle
+# Tüm Çalışanları Worklogs'a Ekle (Durum ve Çalışılan Saatler ile)
 # -----------------------
 @app.route("/add_all_worklogs", methods=["POST"])
 def add_all_worklogs():
@@ -42,19 +44,37 @@ def add_all_worklogs():
                 continue
             site_adi = site["Site Adı"]
 
-            # workslog tablosuna ekle
-            cursor.execute("""
-                INSERT INTO workslog ("Çalışan ID", "Adı", "Site Adı", "Site ID")
-                VALUES (?, ?, ?, ?)
-            """, (calisan_id, adi, site_adi, site_id))
+            # Durum ve çalışılan saatler
+            durum = "devamlı"
+            calisilan_saatler = 8 if durum == "devamlı" else 0
 
-            eklenenler.append({"Çalışan ID": calisan_id, "Adı": adi, "Site Adı": site_adi, "Site ID": site_id})
+            # Tarih ve saat
+            tarih = datetime.now().strftime("%Y-%m-%d")
+            saat = datetime.now().strftime("%H:%M:%S")
+
+            # Worklogs tablosuna ekle
+            cursor.execute("""
+                INSERT INTO Worklogs 
+                ("Çalışan_ID", "Çalışan_Adi", "Site_ID", "Site_Adi", "Durum", "Calisilan_Saatler", "Tarih", "Saat")
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (calisan_id, adi, site_id, site_adi, durum, calisilan_saatler, tarih, saat))
+
+            eklenenler.append({
+                "Çalışan ID": calisan_id,
+                "Adı": adi,
+                "Site Adı": site_adi,
+                "Site ID": site_id,
+                "Durum": durum,
+                "Çalışılan Saatler": calisilan_saatler,
+                "Tarih": tarih,
+                "Saat": saat
+            })
 
         conn.commit()
         conn.close()
 
         return jsonify({
-            "message": "✅ Tüm çalışanların verileri workslog tablosuna eklendi",
+            "message": "✅ Tüm çalışanların verileri worklogs tablosuna eklendi",
             "eklenenler": eklenenler
         }), 201
 
@@ -66,3 +86,4 @@ def add_all_worklogs():
 # -----------------------
 if __name__ == "__main__":
     app.run(port=5010, debug=True)
+

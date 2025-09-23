@@ -5,8 +5,9 @@ import os
 app = Flask(__name__)
 
 # Veritabanı yolu
-script_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(script_dir, "veriler.db")
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
+
 
 def get_db_connection():
     conn = sqlite3.connect(db_path)

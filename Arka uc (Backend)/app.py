@@ -49,6 +49,22 @@ from ceza_Tablosu.ekleme import ekle_ceza
 
 
 
+from müdür_Tablosu.ekleme import mudur_ekle
+from müdür_Tablosu.listeleme import listele_mudur
+from müdür_Tablosu.güncelle import guncelle_mudur
+from müdür_Tablosu.silme import sil_mudur
+
+
+
+
+from müdür_Değerlendirme.ekleme import mudur_degerlendirme_ekle
+from müdür_Değerlendirme.listele import mudur_degerlendirme_listele
+from müdür_Değerlendirme.güncelleme import mudur_degerlendirme_guncelle
+from müdür_Değerlendirme.silme import mudur_degerlendirme_sil
+
+
+
+
 from Loans.add import add_loan
 from Loans.update import update_loan
 from Loans.get import get_loans
@@ -145,6 +161,22 @@ app.add_url_rule('/overtime_sil', view_func=overtime_sil, methods=['DELETE'])
 
 app.add_url_rule('/ceza_ekle', view_func=ekle_ceza, methods=['POST'])
 
+
+
+
+
+app.add_url_rule('/mudur_ekle', view_func=mudur_ekle, methods=['POST'])
+app.add_url_rule('/mudur_listele', view_func=listele_mudur, methods=['GET'])
+app.add_url_rule('/mudur_guncelle', view_func=guncelle_mudur, methods=['PUT'])
+app.add_url_rule('/mudur_sil', view_func=sil_mudur, methods=['DELETE'])
+
+
+
+
+app.add_url_rule('/mudur_degerlendirme_ekle', view_func=mudur_degerlendirme_ekle, methods=['POST'])
+app.add_url_rule('/mudur_degerlendirme_listele', view_func=mudur_degerlendirme_listele, methods=['GET'])
+app.add_url_rule('/mudur_degerlendirme_guncelle', view_func=mudur_degerlendirme_guncelle, methods=['PUT'])
+app.add_url_rule('/mudur_degerlendirme_sil', view_func=mudur_degerlendirme_sil, methods=['DELETE'])
 
 
 

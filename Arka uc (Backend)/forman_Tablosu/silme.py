@@ -1,7 +1,12 @@
 from flask import Flask, request, jsonify
 import sqlite3
+import os
 
 app = Flask(__name__)
+
+# Veritabanı yolu dinamik
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
 
 @app.route("/forman_sil", methods=["DELETE"])
 def forman_sil():
@@ -10,7 +15,7 @@ def forman_sil():
     if not forman_id:
         return jsonify({"error": "Forman ID gerekli"}), 400
 
-    conn = sqlite3.connect(r"D:\Business woman\SiteTasarimi\Arka uc (Backend)\forman_Tablosu\veriler.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     cursor.execute("DELETE FROM Forman WHERE ID=?", (forman_id,))

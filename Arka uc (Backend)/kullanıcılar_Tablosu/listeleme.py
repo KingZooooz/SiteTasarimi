@@ -1,12 +1,17 @@
 from flask import Flask, jsonify
 import sqlite3
+import os
 
 app = Flask(__name__)
+
+# Veritabanı yolu dinamik
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(base_dir, "veriler.db")
 
 @app.route('/kullanici_listele', methods=['GET'])
 def kullanici_listele():
     try:
-        conn = sqlite3.connect(r"D:\Business woman\SiteTasarimi\Arka uc (Backend)\kullanıcılar_Tablosu\veriler.db")
+        conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row  # kolon isimleriyle erişim için
         cursor = conn.cursor()
 
@@ -29,3 +34,4 @@ def kullanici_listele():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
