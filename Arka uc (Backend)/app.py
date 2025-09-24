@@ -99,6 +99,7 @@ from Rewards_And_Penalties.get import get_rewards_penalties
 from Rewards_And_Penalties.delete import delete_reward_penalty
 
 
+from Workslog_Tablosu.Maaş_hesabı import maas_hesapla
 
 
 
@@ -221,6 +222,8 @@ app.add_url_rule('/api/rewards_penalties', view_func=get_rewards_penalties, meth
 app.add_url_rule('/api/rewards_penalties/delete/<int:entry_id>', view_func=delete_reward_penalty, methods=['DELETE'])
 
 
+
+app.add_url_rule('/maas_hesapla', view_func=maas_hesapla, methods=['GET'])
 
 
 @app.route('/')
