@@ -65,6 +65,11 @@ from müdür_Değerlendirme.silme import mudur_degerlendirme_sil
 
 
 
+from Login_tablosu.ekleme import login_ekle
+from Login_tablosu.güncelleme import update_login
+
+
+
 from Loans.add import add_loan
 from Loans.update import update_loan
 from Loans.get import get_loans
@@ -97,9 +102,6 @@ from Rewards_And_Penalties.add import add_reward_penalty
 from Rewards_And_Penalties.update import update_reward_penalty
 from Rewards_And_Penalties.get import get_rewards_penalties
 from Rewards_And_Penalties.delete import delete_reward_penalty
-
-
-from Workslog_Tablosu.Maaş_hesabı import maas_hesapla
 
 
 
@@ -166,6 +168,12 @@ app.add_url_rule('/ceza_ekle', view_func=ekle_ceza, methods=['POST'])
 
 
 
+app.add_url_rule('/add_login', view_func=login_ekle, methods=['POST'])
+app.add_url_rule('/update_login', view_func=update_login, methods=['PUT'])
+
+
+
+
 app.add_url_rule('/mudur_ekle', view_func=mudur_ekle, methods=['POST'])
 app.add_url_rule('/mudur_listele', view_func=listele_mudur, methods=['GET'])
 app.add_url_rule('/mudur_guncelle', view_func=guncelle_mudur, methods=['PUT'])
@@ -222,8 +230,6 @@ app.add_url_rule('/api/rewards_penalties', view_func=get_rewards_penalties, meth
 app.add_url_rule('/api/rewards_penalties/delete/<int:entry_id>', view_func=delete_reward_penalty, methods=['DELETE'])
 
 
-
-app.add_url_rule('/maas_hesapla', view_func=maas_hesapla, methods=['GET'])
 
 
 @app.route('/')
